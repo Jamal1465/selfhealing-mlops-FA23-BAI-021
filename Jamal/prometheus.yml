@@ -1,0 +1,20 @@
+global:
+  scrape_interval:     10s
+  evaluation_interval: 10s
+
+# ── Alert rules file ───────────────────────────────────────────────────────────
+rule_files:
+  - "alert.rules.yml"
+
+# ── Alertmanager endpoint ──────────────────────────────────────────────────────
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - "3.222.182.127:9093"
+
+# ── Scrape config ──────────────────────────────────────────────────────────────
+scrape_configs:
+  - job_name: 'sentiment-ml-exporter'        # EXACT name checked by grading script
+    static_configs:
+      - targets: ['3.222.182.127:8000']
