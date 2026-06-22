@@ -1,3 +1,4 @@
+from flask import Flask, request, jsonify
 import re 
 app = Flask(__name__) 
 POSITIVE_WORDS = {"good","great","excellent","happy","love", 
