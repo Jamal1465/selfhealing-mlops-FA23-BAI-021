@@ -1,8 +1,3 @@
-"""
-exporter.py  —  FA23-BAI-030
-Polls /api/latest-confidence every 5 s and exposes
-the metric  prediction_confidence_score  on port 8000.
-"""
 
 import time
 import requests
@@ -16,7 +11,7 @@ CONFIDENCE_GAUGE = Gauge(
 
 # ── Target: app running via Minikube NodePort ─────────────────────────────────
 
-APP_URL = "http://3.222.182.127/:32500/api/latest-confidence"
+APP_URL = "http://44.199.50.27:32500/api/latest-confidence"
 
 POLL_INTERVAL = 5   # seconds
 DEFAULT_VALUE  = 1.0
