@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: sentiment-api
-          image: bilalaskari/sentiment-api:stable   # replace username
+          image: jamal1465/sentiment-api:stable    # replace username
           ports:
             - containerPort: 5000
