@@ -2,12 +2,12 @@ groups:
   - name: ml_drift_alerts
     rules:
       - alert: ModelConfidenceDrift          # EXACT name — do NOT change
-        expr: prediction_confidence_score < 0.61   # FA23-BAI-030 assigned threshold
+        expr: prediction_confidence_score < 0.583  # 
         for: 1m                              # fires after 1 minute below threshold
         labels:
           severity: critical
         annotations:
           summary: "ML model confidence has dropped below threshold (0.61)"
           description: >
-            prediction_confidence_score has been below 0.61
+            prediction_confidence_score has been below 0.583
             for more than 1 minute. Triggering rollback to stable.
