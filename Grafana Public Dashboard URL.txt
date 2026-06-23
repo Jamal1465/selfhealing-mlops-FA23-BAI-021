@@ -1,1 +1,1 @@
-http://3.222.182.127:3000/public-dashboards/4c536b641ec24882903c92fbef6dc086
+http://172.193.26.41:3000/public-dashboards/2ae2bf7a14c74723bd7a35862006706e
