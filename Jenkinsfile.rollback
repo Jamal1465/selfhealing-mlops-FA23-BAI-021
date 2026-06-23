@@ -8,7 +8,7 @@ pipeline {
                         -p '{"spec":{"selector":{"slot":"green"}}}'
                     sleep 2
                     curl -X POST http://localhost:32500/reset || true
-                    sudo systemctl restart kubectl-portforward || true
+                    sudo systemctl restart sentiment-api-portforward || true
                     sleep 5
                 """
             }
