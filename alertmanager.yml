@@ -16,4 +16,4 @@ receivers:
         http_config:
           basic_auth:
             username: 'root'
-            password: '118dc46817865ffe2b23021b591e9396fd'
+            password: '115dd5fb0f899194276528c76dd5f474d6'
