@@ -127,6 +127,7 @@
 //     }
 // }
 
+
 pipeline {
     agent any
     environment {
@@ -136,6 +137,7 @@ pipeline {
         IMAGE_STABLE = "${DOCKERHUB_USER}/sentiment-api:stable"
         APP_CONTAINER = "sentiment-app-test"
         APP_PORT = "5000"
+        KUBECONFIG = "/var/lib/jenkins/.kube/config"
     }
     stages {
         stage('Fetch') {
@@ -197,11 +199,11 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 sh '''
-                    # Use sudo to access minikube certs
-                    sudo -n minikube kubectl -- apply -f k8s/
-                    sudo -n minikube kubectl -- rollout status deployment/sentiment-blue-deployment --timeout=120s
-                    sudo -n minikube kubectl -- rollout status deployment/sentiment-green-deployment --timeout=120s
-                    sudo -n minikube kubectl -- get svc sentiment-api-service
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
+                    kubectl apply -f k8s/
+                    kubectl rollout status deployment/sentiment-blue-deployment --timeout=120s
+                    kubectl rollout status deployment/sentiment-green-deployment --timeout=120s
+                    kubectl get svc sentiment-api-service
                 '''
             }
         }
@@ -215,3 +217,4 @@ pipeline {
         }
     }
 }
+
