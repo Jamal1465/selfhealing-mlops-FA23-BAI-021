@@ -101,9 +101,6 @@ pipeline {
                     echo "Pushing unstable image..."
                     docker push ${IMAGE_UNSTABLE}
 
-                    echo "Saving main branch app.py..."
-                    cp app.py /tmp/app-main.py
-
                     echo "Fetching stable-fallback branch..."
                     git fetch origin stable-fallback
 
@@ -119,8 +116,11 @@ pipeline {
                     echo "Pushing stable image..."
                     docker push ${IMAGE_STABLE}
 
-                    echo "Restoring main branch app.py..."
-                    cp /tmp/app-main.py app.py
+                    echo "Restoring main branch app.py from current HEAD..."
+                    git checkout HEAD -- app.py
+
+                    echo "Checking restored main app.py..."
+                    grep -n "unstable-v1" app.py
                 '''
             }
         }
