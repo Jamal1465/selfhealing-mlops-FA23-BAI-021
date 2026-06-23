@@ -48,8 +48,11 @@ pipeline {
             steps {
                 sh '''
                     echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+                    
+                    # Push unstable image
                     docker push ${IMAGE_UNSTABLE}
                     
+                    # Build stable image AFTER tests pass
                     cp app.py /tmp/app-main.py
                     cp requirements.txt /tmp/requirements-main.txt
                     cp Dockerfile /tmp/Dockerfile-main
@@ -60,6 +63,7 @@ pipeline {
                     docker build -t ${IMAGE_STABLE} .
                     docker push ${IMAGE_STABLE}
                     
+                    # Restore main files
                     cp /tmp/app-main.py app.py
                     cp /tmp/requirements-main.txt requirements.txt
                     cp /tmp/Dockerfile-main Dockerfile
