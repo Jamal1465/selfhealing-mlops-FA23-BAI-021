@@ -197,11 +197,11 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 sh '''
-                    # Use minikube's kubectl
-                    minikube kubectl -- apply -f k8s/
-                    minikube kubectl -- rollout status deployment/sentiment-blue-deployment --timeout=120s
-                    minikube kubectl -- rollout status deployment/sentiment-green-deployment --timeout=120s
-                    minikube kubectl -- get svc sentiment-api-service
+                    # Use sudo to access minikube certs
+                    sudo -n minikube kubectl -- apply -f k8s/
+                    sudo -n minikube kubectl -- rollout status deployment/sentiment-blue-deployment --timeout=120s
+                    sudo -n minikube kubectl -- rollout status deployment/sentiment-green-deployment --timeout=120s
+                    sudo -n minikube kubectl -- get svc sentiment-api-service
                 '''
             }
         }
@@ -215,4 +215,3 @@ pipeline {
         }
     }
 }
-
