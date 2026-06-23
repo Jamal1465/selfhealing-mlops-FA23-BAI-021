@@ -17,7 +17,8 @@ pipeline {
             steps {
                 sh '''
                     docker rm -f ${APP_CONTAINER} || true
-                    docker build -t ${IMAGE_UNSTABLE} .
+                    # Force fresh build - no cache
+                    docker build --no-cache -t ${IMAGE_UNSTABLE} .
                     docker run -d --name ${APP_CONTAINER} --network host ${IMAGE_UNSTABLE}
                     for i in $(seq 1 30); do
                         curl -sf http://localhost:${APP_PORT}/health && echo "App ready!" && break
@@ -60,7 +61,7 @@ pipeline {
                     git fetch origin stable-fallback
                     git checkout origin/stable-fallback -- app.py
                     
-                    docker build -t ${IMAGE_STABLE} .
+                    docker build --no-cache -t ${IMAGE_STABLE} .
                     docker push ${IMAGE_STABLE}
                     
                     # Restore main files
