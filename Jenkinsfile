@@ -11,13 +11,17 @@ pipeline {
     }
     stages {
         stage('Fetch') {
-            steps { checkout scm }
+            steps {
+                cleanWs()
+                checkout scm
+                // Ensure main branch app.py is used
+                sh 'git checkout main -- app.py requirements.txt Dockerfile || true'
+            }
         }
         stage('Build and Run') {
             steps {
                 sh '''
                     docker rm -f ${APP_CONTAINER} || true
-                    # Force fresh build - no cache
                     docker build --no-cache -t ${IMAGE_UNSTABLE} .
                     docker run -d --name ${APP_CONTAINER} --network host ${IMAGE_UNSTABLE}
                     for i in $(seq 1 30); do
@@ -49,11 +53,8 @@ pipeline {
             steps {
                 sh '''
                     echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
-                    
-                    # Push unstable image
                     docker push ${IMAGE_UNSTABLE}
                     
-                    # Build stable image AFTER tests pass
                     cp app.py /tmp/app-main.py
                     cp requirements.txt /tmp/requirements-main.txt
                     cp Dockerfile /tmp/Dockerfile-main
@@ -64,7 +65,6 @@ pipeline {
                     docker build --no-cache -t ${IMAGE_STABLE} .
                     docker push ${IMAGE_STABLE}
                     
-                    # Restore main files
                     cp /tmp/app-main.py app.py
                     cp /tmp/requirements-main.txt requirements.txt
                     cp /tmp/Dockerfile-main Dockerfile
@@ -76,8 +76,8 @@ pipeline {
                 sh '''
                     export KUBECONFIG=/var/lib/jenkins/.kube/config
                     kubectl apply -f k8s/
-                    kubectl rollout status deployment/sentiment-blue-deployment --timeout=300s
-                    kubectl rollout status deployment/sentiment-green-deployment --timeout=300s
+                    kubectl rollout status deployment/sentiment-blue-deployment --timeout=120s
+                    kubectl rollout status deployment/sentiment-green-deployment --timeout=120s
                     kubectl get svc sentiment-api-service
                 '''
             }
@@ -85,6 +85,7 @@ pipeline {
     }
     post {
         always {
+            cleanWs()
             sh '''
                 docker rm -f ${APP_CONTAINER} || true
                 docker logout || true
