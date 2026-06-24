@@ -1,1 +1,1 @@
-http://172.193.26.41:3000/public-dashboards/2ae2bf7a14c74723bd7a35862006706e
+http://localhost:3000/public-dashboards/08e90e7ac4964fff9c53c06057690e7e
